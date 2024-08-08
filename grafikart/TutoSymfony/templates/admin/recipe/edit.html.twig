@@ -1,9 +1,11 @@
 {% extends 'admin/admin.html.twig' %}
 
-{% block title "Recette : " ~ recipe.title %}
+{% block title "Recette : " ~ recipe.title %} {# le titre de la recette choisis #}
 
 {% block body %}
-    <h1>{{recipe.title}}</h1>
+    <h1>{{recipe.title}}</h1> {# le titre de la recette choisis #}
+
+    <img src="{{ vich_uploader_asset(recipe, 'thumbnailFile') }} " alt=""> {# l'image choisis #}
 
     {{form(form)}}
 {% endblock %}

@@ -24,18 +24,24 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement as RequirementRequirement;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route("/admin/recettes", name: 'admin.recipe.')]
+#[IsGranted('ROLE_ADMIN')]
 class RecipeController extends AbstractController
 {
 
     #[Route('/', name: 'index')]
-    public function index(RecipeRepository $repository, CategoryRepository $categoryRepository, EntityManagerInterface $em): Response
+    public function index(RecipeRepository $repository, Request $request): Response
     {
-        $recipes = $repository->findWithDurationLowerThan(30);
-            $em->flush();
+
+        $page = $request->query->getInt('page', 1);
+        $limit = 2;
+        $recipes = $repository->paginateRecipes($page);
         return $this->render('admin/recipe/index.html.twig', [
-            'recipes' => $recipes
+            'recipes' => $recipes,
+
         ]);
     }
 
@@ -57,8 +63,8 @@ class RecipeController extends AbstractController
 
     #[Route('/{id}', name: 'edit', methods: ['GET', 'POST'], requirements:['id' => RequirementRequirement::DIGITS])]
 
-    public function edit(Recipe $recipe, Request $request, EntityManagerInterface $em, FormFactoryInterface $formFactory) {
-        $form = $formFactory->create(RecipeType::class, $recipe);
+    public function edit(Recipe $recipe, Request $request, EntityManagerInterface $em) {
+        $form = $this->createForm(RecipeType::class, $recipe);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             $em->flush();
@@ -73,7 +79,7 @@ class RecipeController extends AbstractController
     }
 
     #[Route('/{id}', name:'delete', methods: ['DELETE'], requirements:['id' => RequirementRequirement::DIGITS])]
-    public function remove(recipe $recipe, EntityManagerInterface $em){
+    public function remove(Recipe $recipe, EntityManagerInterface $em){
         $em->remove($recipe);
         $em->flush();
         $this->addFlash('success', 'La recette a bien été supprimée');

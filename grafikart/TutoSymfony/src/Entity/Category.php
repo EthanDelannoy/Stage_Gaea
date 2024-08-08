@@ -10,21 +10,21 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
-#[UniqueEntity('name')]
-#[UniqueEntity('slug')]
+#[UniqueEntity('name')] // il ne peux avoir que 1 seul nom identique
+#[UniqueEntity('slug')] // il ne peux avoir que 1 seul slug identique
 class Category
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue] //génere automatiquement 
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255)] // 255 caratére max
     private string $name = '';
 
-    #[ORM\Column(length: 255)]
-    #[Assert\Length(min: 5)]
-    #[Assert\Regex('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', message:'Invalid slug')]
+    #[ORM\Column(length: 255)] // 255 caratére max
+    #[Assert\Length(min: 5)] // 5 caratére min 
+    #[Assert\Regex('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', message:'Invalid slug')] //le regex, si pas valide alors affiche le message
     private string $slug = '';
 
     #[ORM\Column]
@@ -107,9 +107,9 @@ class Category
 
     public function addRecipe(Recipe $recipe): static
     {
-        if (!$this->recipes->contains($recipe)) {
-            $this->recipes->add($recipe);
-            $recipe->setCategory($this);
+        if (!$this->recipes->contains($recipe)) { //si la recette n'a pas de categorie
+            $this->recipes->add($recipe); //on lui en donne une
+            $recipe->setCategory($this); 
         }
 
         return $this;
@@ -117,8 +117,7 @@ class Category
 
     public function removeRecipe(Recipe $recipe): static
     {
-        if ($this->recipes->removeElement($recipe)) {
-            // set the owning side to null (unless already changed)
+        if ($this->recipes->removeElement($recipe)) { //supprimé une catégories
             if ($recipe->getCategory() === $this) {
                 $recipe->setCategory(null);
             }

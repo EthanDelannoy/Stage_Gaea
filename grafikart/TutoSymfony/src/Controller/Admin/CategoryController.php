@@ -12,43 +12,45 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route("/admin/category", name: 'admin.category.')]
+#[Route("/admin/category", name: 'admin.category.')] //Le chemain 
+#[IsGranted('ROLE_ADMIN')] // Seul les admins peuvent y accedez
 class CategoryController extends AbstractController {
 
-    #[Route(name: 'index')]
+    #[Route(name: 'index')] //Le chemain 
     public function index(CategoryRepository $repository){
-        return $this->render('admin/category/index.html.twig', [
-            'categories' => $repository->findAll()
+        return $this->render('admin/category/index.html.twig', [  //Afficher ce que l'on veux 
+            'categories' => $repository->findAllWithCount()       //Avec cette fonctions
         ]);
     }
 
-    #[Route('/create', name: 'create')]
+    #[Route('/create', name: 'create')] //Le chemain 
     public function create(Request $request, EntityManagerInterface $em){
         $category = new Category();
-        $form = $this->createForm(CategoryType::class, $category);
-        $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
-            $em->persist($category);
-            $em->flush();
-            $this->addFlash('success', 'La catégorie a bien été créée');
-            return $this->redirectToRoute('admin.category.index');
+        $form = $this->createForm(CategoryType::class, $category); //Creer le formulaire 
+        $form->handleRequest($request);                            //envoyer les informations
+        if($form->isSubmitted() && $form->isValid()){              // si c'est envoyé et valide 
+            $em->persist($category);                               // la requetes est envoyé 
+            $em->flush();                                          // la requetes est envoyé 
+            $this->addFlash('success', 'La catégorie a bien été créée');  // Mettre un message de validation visible
+            return $this->redirectToRoute('admin.category.index');   // Le rediriger vers l'index
         }
-        return $this->render('admin/category/create.html.twig', [
+        return $this->render('admin/category/create.html.twig', [    // afficher le formulaire 
             'form' => $form
         ]);
     }
 
     #[Route('/{id}', name: 'edit', requirements:['id' => Requirement::DIGITS], methods:['GET', 'POST'])]
     public function edit(Category $category, Request $request, EntityManagerInterface $em){
-        $form = $this->createForm(CategoryType::class, $category);
-        $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
-            $em->flush();
-            $this->addFlash('success', 'La catégorie a bien été modifiée');
-            return $this->redirectToRoute('admin.category.index');
+        $form = $this->createForm(CategoryType::class, $category);   //Creer le formulaire
+        $form->handleRequest($request);                              //envoyer les informations
+        if($form->isSubmitted() && $form->isValid()){                // si c'est envoyé et valide 
+            $em->flush();                                            // la requetes est envoyé 
+            $this->addFlash('success', 'La catégorie a bien été modifiée'); // Mettre un message de validation visible
+            return $this->redirectToRoute('admin.category.index'); // Le rediriger vers l'index
         }
-        return $this->render('admin/category/edit.html.twig', [
+        return $this->render('admin/category/edit.html.twig', [ // afficher le formulaire 
             'category' => $category,
             'form' => $form
         ]);
@@ -57,9 +59,9 @@ class CategoryController extends AbstractController {
 
     #[Route('/{id}', name: 'delete', requirements:['id' => Requirement::DIGITS], methods:['DELETE'])]
     public function remove(Category $category, EntityManagerInterface $em){
-        $em->remove($category);
-        $em->flush();
-        $this->addFlash('success', 'La catégorie a bien été supprimée');
-        return $this->redirectToRoute('admin.category.index');
+        $em->remove($category);     //Supprimer la categorie
+        $em->flush();               //Envoyer la requetes
+        $this->addFlash('success', 'La catégorie a bien été supprimée');  // Mettre un message de validation visible
+        return $this->redirectToRoute('admin.category.index'); // Le rediriger vers l'index
     }
 }

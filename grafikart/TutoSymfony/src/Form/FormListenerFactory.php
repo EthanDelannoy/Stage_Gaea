@@ -14,10 +14,10 @@ class FormListenerFactory{
         
     }
 
-    public function autoSlug(string $field):callable {
+    public function autoSlug(string $field):callable { //fonctione pour remplir le slug via le titre 
         return function (PreSubmitEvent $event) use ($field){
             $data = $event->getData();
-            if(empty($data['slug'])){
+            if(empty($data['slug'])){ //si il n'y a pas de slug alors
                 $slugger = new AsciiSlugger();
                 $data['slug'] = strtolower($this->slugger->slug($data[$field]));
                 $event->setData($data);
@@ -28,9 +28,9 @@ class FormListenerFactory{
     public function timestamps():callable{
         return function (PostSubmitEvent $event) {
             $data = $event->getData();
-            $data->setUpdatedAt(new \DateTimeImmutable());
+            $data->setUpdatedAt(new \DateTimeImmutable()); // remplis le champ updateAt par le jour/heure du moment
             if(!$data->getId()){
-                $data->setCreatedAt(new \DateTimeImmutable());
+                $data->setCreatedAt(new \DateTimeImmutable()); // remplis le champ createdAt par le jour/heure du moment
             }
         };
     }

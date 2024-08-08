@@ -18,19 +18,19 @@ class ContactType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'empty_data' => ''
+                'empty_data' => '' // si le nom est vide alors on lui met une chaine de caractère vide
             ])
             ->add('email', EmailType::class, [
-                'empty_data' => ''
+                'empty_data' => '' // si le nom est vide alors on lui met une chaine de caractère vide
             ])
             ->add('message', TextareaType::class, [
-                'empty_data' => ''
+                'empty_data' => '' // si le nom est vide alors on lui met une chaine de caractère vide
             ])
             ->add('save', SubmitType::class, [
-                'label' => 'Envoyer'
+                'label' => 'Envoyer' // le nom du bouton submit
             ])
             ->add('service', ChoiceType::class, [
-                'choices' => [
+                'choices' => [ // On lui donne le choix du nom de mail à qui l'envoyer
                     'Compta' => 'compta@demo.fr',
                     'Support' => 'support@demo.fr',
                     'Markerting' => 'markerting@demo.fr',

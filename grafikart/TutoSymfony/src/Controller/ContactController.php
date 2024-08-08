@@ -18,24 +18,24 @@ class ContactController extends AbstractController
     {
         $data = new ContactDTO();
 
-        $form = $this->createForm(ContactType::class, $data);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        $form = $this->createForm(ContactType::class, $data); //Creer le formulaire de contact 
+        $form->handleRequest($request);                         //envoyer les informations
+        if ($form->isSubmitted() && $form->isValid()) {       // si c'est envoyé et valide 
             try {
                 $mail = (new TemplatedEmail())
-                    ->to($data->service)
-                    ->from($data->email)
-                    ->subject('Demande de contact')
-                    ->htmlTemplate('emails/contact.html.twig')
-                    ->context(['data' => $data]);
-                $mailer->send($mail);
-                $this->addFlash('success', 'Votre email a bien été envoyé');
-                return $this->redirectToRoute('contact');
-            } catch (\Exception $e) {
-                $this->addFlash('danger', 'Impossible d\'envoyer votre email');
+                    ->to($data->service)             //La personne à laquelle on l'envoie
+                    ->from($data->email)             //De quel email on l'envoie
+                    ->subject('Demande de contact')  // l'objet
+                    ->htmlTemplate('emails/contact.html.twig') //L'affichage du mail
+                    ->context(['data' => $data]); // l'intérieur du mail 
+                $mailer->send($mail);  //envoyer le mail
+                $this->addFlash('success', 'Votre email a bien été envoyé'); // afficher le message de validation 
+                return $this->redirectToRoute('contact'); // le rediriger 
+            } catch (\Exception $e) { // si ya une erreur 
+                $this->addFlash('danger', 'Impossible d\'envoyer votre email'); // afficher le message d'erreur 
             };
         }
-        return $this->render('contact/contact.html.twig', [
+        return $this->render('contact/contact.html.twig', [ //Afficher le formulaire 
             'form' => $form,
         ]);
     }

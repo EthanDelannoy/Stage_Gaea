@@ -7,11 +7,14 @@ use App\Validator\BanWord;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: RecipeRepository::class)]
-#[UniqueEntity('title')]
-#[UniqueEntity('slug')]
+#[UniqueEntity('title')] // 1 titre identique 
+#[UniqueEntity('slug')] // 1 slug identique 
+#[Vich\Uploadable()]
 class Recipe
 {
     #[ORM\Id]
@@ -19,18 +22,18 @@ class Recipe
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    #[Assert\Length(min: 5)]
-    #[BanWord()]
+    #[ORM\Column(length: 255)] // max 255 
+    #[Assert\Length(min: 5)] //min 5
+    #[BanWord()] //Supprimer des mots choisis au préalable
     private string $title = '';
 
-    #[ORM\Column(length: 255)]
-    #[Assert\Length(min: 5)]
-    #[Assert\Regex('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', message:'Invalid slug')]
+    #[ORM\Column(length: 255)] // max 255 
+    #[Assert\Length(min: 5)] // min 5
+    #[Assert\Regex('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', message:'Invalid slug')] // regex, si pas valide alors message
     private string $slug = '';
 
-    #[ORM\Column(type: Types::TEXT)]
-    #[Assert\Length(min: 5)]
+    #[ORM\Column(type: Types::TEXT)] // type texte
+    #[Assert\Length(min: 5)] // min 5
     private string $content = '';
 
     #[ORM\Column]
@@ -40,12 +43,19 @@ class Recipe
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(nullable: true)]
-    #[Assert\Positive()]
-    #[Assert\LessThan(value: 1440)]
+    #[Assert\Positive()] // doit être positif
+    #[Assert\LessThan(value: 1440)] // doit être plus petit que 1440min max 
     private ?int $duration = null;
 
     #[ORM\ManyToOne(inversedBy: 'recipes', cascade: ['persist'])]
     private ?Category $category = null;
+
+    #[ORM\Column(length: 255, nullable: true)] // max 255 et peux être vide 
+    private ?string $thumbnail = null;
+
+    #[Vich\UploadableField(mapping: 'recipes', fileNameProperty: 'thumbnail')]
+    #[Assert\Image()] // on peux lui met une image
+    private ?File $thumbnailFile = null;
 
     public function getId(): ?int
     {
@@ -134,5 +144,28 @@ class Recipe
         $this->category = $category;
 
         return $this;
+    }
+
+    public function getThumbnail(): ?string
+    {
+        return $this->thumbnail;
+    }
+
+    public function setThumbnail(?string $thumbnail): static
+    {
+        $this->thumbnail = $thumbnail;
+
+        return $this;
+    }
+
+    public function getThumbnailFile(): ?File
+    {
+        return $this->thumbnailFile;
+    }
+
+    public function setThumbnailFile(?File $thumbnailFile): static
+    {
+         $this->thumbnailFile = $thumbnailFile;
+         return $this;
     }
 }

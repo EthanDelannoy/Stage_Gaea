@@ -1,5 +1,7 @@
+{# Template pour les personnes non connecté #}
+
 <!DOCTYPE html>
-<html>
+<html class="bg-light">
 	<head>
 		<meta charset="UTF-8">
 		<title>
@@ -14,7 +16,7 @@
 			{% endblock %}
 		{% endblock %}
 	</head>
-	<body>
+	 <body class="bg-light">
 
 		<nav class="navbar bg-primary navbar-expand-lg" data-bs-theme="dark">
 			<div class="container-fluid">
@@ -25,8 +27,11 @@
 							<a class="nav-link {{ app.current_route == 'home' ? 'active' : '' }}"  href="{{ path('home') }}">Accueil</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link {{ app.current_route starts with 'recipe.' ? 'active' : '' }}" href="{{ path('recipe.index') }}">Recettes</a>
+							<a class="nav-link {{ app.current_route == 'login' ? 'active' : '' }}"  href="{{ path('login') }}">Connexion</a>
 						</li>
+						{# <li class="nav-item">
+							<a class="nav-link {{ app.current_route starts with 'recipe.' ? 'active' : '' }}" href="{{ path('recipe.index') }}">Recettes</a>
+						</li> #}
 					</ul>
 				</div>
 			</div>

@@ -15,10 +15,10 @@ class BanWordValidator extends ConstraintValidator
             return;
         }
 
-        $value = strtolower($value);
+        $value = strtolower($value); //met la valeur en majuscule 
 
         foreach($constraint->banWords as $banWord){
-            if (str_contains($value, $banWord)) {
+            if (str_contains($value, $banWord)) { // Si détecte un mot bannie alors l'erreur se met 
                 $this->context->buildViolation($constraint->message)
                 ->setParameter('{{ banWord }}', $banWord)
                 ->addViolation();

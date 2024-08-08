@@ -9,7 +9,8 @@
     <table class="table">
 		<thead>
 			<tr>
-				<th>Titre</th>
+				<th> {{ knp_pagination_sortable(recipes, 'ID', 'r.id') }} </th> {# permet de au click, trier par ID #}
+				<th> {{ knp_pagination_sortable(recipes, 'Titre', 'r.title') }} </th> {# permet de au click, trier par NOM #}
 				<th>Catégorie</th>
 				<th style="width: 200px">Actions</th>
 			</tr>
@@ -17,6 +18,7 @@
 		<tbody>
 			{% for recipe in recipes %}
 				<tr>
+					<td> {{ recipe.id }} </td>
 					<td>
 						<a href="{{ url('admin.recipe.edit', {id: recipe.id }) }}">{{recipe.title}}</a>
 					</td>
@@ -24,7 +26,7 @@
 					<td>
                        <div class="d-flex gap-1">
                        <a class="btn btn-primary btn-sm" href="{{ path('admin.recipe.edit', {id: recipe.id}) }}">Editer</a>
-                        <form action="{{ path('admin.recipe.delete', {id: recipe.id}) }}" method="post">
+                        <form action="{{ path('admin.recipe.delete', {id: recipe.id}) }}" method="post"> {# methode pour supprimer #}
                         <input type="hidden" name="_method" value="DELETE">
                         <button type="sumbit" class="btn btn-danger btn-sm">Supprimer</button>
                         </form>
@@ -34,4 +36,7 @@
 			{% endfor %}
 		</tbody>
 	</table>
+	<div class="d-flex">
+	{{ knp_pagination_render(recipes) }}
+	</div>
 {% endblock %}

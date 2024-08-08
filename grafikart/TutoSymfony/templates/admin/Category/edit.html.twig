@@ -1,11 +1,11 @@
 {% extends 'admin/admin.html.twig' %}
 
-{% block title 'Editer la catégorie' ~ category.name %}
+{% block title 'Editer la catégorie' ~ category.name %} {# titre + le nom de la categorie choisie #}
 
 {% block body %}
 
-    <h1>Editer la catégorie {{ category.name }}</h1>
+    <h1>Editer la catégorie {{ category.name }}</h1> {# titre + le nom de la categorie choisie #}
 
-    {{ form(form) }}
+    {{ form(form) }} {# Affiche le formulaire #}
 	
 {% endblock %}

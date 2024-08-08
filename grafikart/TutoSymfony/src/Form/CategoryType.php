@@ -23,19 +23,19 @@ class CategoryType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', TextType::class, [
-                'empty_data' => ''
+            ->add('name', TextType::class, [ 
+                'empty_data' => ''  // si le nom est vide alors on lui met une chaine de caractère vide
             ])
-            ->add('slug', TextType::class, [
-                'required' => false,
-                'empty_data' => ''
+            ->add('slug', TextType::class, [ 
+                'required' => false, // pas obligatoire
+                'empty_data' => '' // si le nom est vide alors on lui met une chaine de caractère vide
             ])
             ->add('save', SubmitType::class, [
-                'label' => 'Enregistrer'
+                'label' => 'Enregistrer' // Changer le nom du bouton 
             ])
-            ->addEventListener(FormEvents::PRE_SUBMIT, $this->listenerFactory->autoSlug('name'))
-            ->addEventListener(FormEvents::POST_SUBMIT, $this->listenerFactory->timestamps())
-        ;
+            ->addEventListener(FormEvents::PRE_SUBMIT, $this->listenerFactory->autoSlug('name')) // remplis le slug en fonction du titre (FormListenerFactory)
+            ->addEventListener(FormEvents::POST_SUBMIT, $this->listenerFactory->timestamps()) //remplis le change created tout seul en fonction du jour/heure actuelle (FormListenerFactory)        
+            ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

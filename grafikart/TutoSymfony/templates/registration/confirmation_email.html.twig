@@ -1,0 +1,13 @@
+{# Template du mail de confirmation d'email #}
+
+<h1>Hi! Please confirm your email!</h1>
+
+<p>
+    Please confirm your email address by clicking the following link: <br><br>
+    <a href="{{ signedUrl|raw }}">Confirm my Email</a>. {# Si on appuie dessus, ca valide l'email et nous redirige vers notre site  #}
+    This link will expire in {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}. {# le temps d'expiration du message #}
+</p>
+
+<p>
+    Cheers!
+</p>
