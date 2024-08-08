@@ -11,7 +11,7 @@ class VinylController extends AbstractController
     public function homepage(Environment $twig): Response
     {
         $tracks = [
-            ['song' => 'Gangsta\'s Paradise', 'artist' => 'Coolio'],
+            ['song' => 'Gangsta\'s Paradise', 'artist' => 'Coolioo'],
             ['song' => 'Waterfalls', 'artist' => 'TLC'],
             ['song' => 'Creep', 'artist' => 'Radiohead'],
             ['song' => 'Kiss from a Rose', 'artist' => 'Seal'],
