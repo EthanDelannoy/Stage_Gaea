@@ -1,0 +1,11 @@
+composer create-project symfony/skeleton:"7.1.*" [NOM DU PROJET] = Creer le projet
+composer require webapp = Installer toutes les dépendance 
+symfony server:start = lancer son serveur
+symfony server:stop = eteindre son serveur
+
+php bin/console make:entity = creer sa BDD
+php bin/console make:migration = verifier si ce sont les bonnes infos qu'y vont être envoyer
+php bin/console doctrine:migrations:migrate = envoyer les informations
+
+php bin/console make:controller [NOM DU CONTROLLER] = creer une page de controller
+

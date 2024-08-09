@@ -25,7 +25,7 @@ class CategoryController extends AbstractController {
         ]);
     }
 
-    #[Route('/create', name: 'create')] //Le chemain 
+    #[Route('/create', name: 'create')] //Le chemin 
     public function create(Request $request, EntityManagerInterface $em){
         $category = new Category();
         $form = $this->createForm(CategoryType::class, $category); //Creer le formulaire 
