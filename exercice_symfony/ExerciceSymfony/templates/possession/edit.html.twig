@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title "Utilisateur : " ~ possession.nom %}
+
+{% block body %}
+
+	<div class="container my-4">
+		<h1>{{possession.nom}}</h1>
+
+		{{form(form)}}
+
+	</div>
+
+{% endblock %}

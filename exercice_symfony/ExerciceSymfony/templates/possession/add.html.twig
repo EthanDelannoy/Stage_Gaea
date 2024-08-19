@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<div class="container my-4">
+    <h1>Ajouter une possession pour {{ user.nom }} {{ user.prenom }}</h1>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+    {{ form_end(form) }}
+</div>
+{% endblock %}

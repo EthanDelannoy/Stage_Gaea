@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title 'Créer un nouvel utilisateur' %}
+
+{% block body %}
+    <div class="container my-4">
+        <h1>Créer un nouvel utilisateur</h1>
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

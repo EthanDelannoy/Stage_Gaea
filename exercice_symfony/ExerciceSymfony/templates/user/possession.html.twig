@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de l'utilisateur{% endblock %}
+
+{% block body %}
+    <div class="d-flex flex-column justify-content-center align-items-center  mt-5">
+        <h2>Détails de l'utilisateur</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Email</th>
+                    <th>Adresse</th>
+                    <th>Téléphone</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ user.nom }}</td>
+                    <td>{{ user.prenom }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.adresse }}</td>
+                    <td>{{ user.tel }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Possessions</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Valeur</th>
+                    <th>Type</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for possession in possessions %}
+                    <tr>
+                        <td>{{ possession.nom }}</td>
+                        <td>{{ possession.valeur }}</td>
+                        <td>{{ possession.type }}</td>
+                        <td>
+                         <div class="d-flex gap-1">
+                         <a class="btn btn-primary btn-sm" href="{{ path('editPossession', {id: possession.id}) }}">Editer</a>
+                            <form action="{{ path('deletePossession', {id: possession.id}) }}" method="delete">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                            </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="3">Aucune possession trouvée pour cet utilisateur.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+      <div class="d-flex justify-content-center align-items-center gap-5">
+        <a href="{{ path('add_possession', { 'id': user.id }) }}" class="btn btn-primary">Ajouter une possession</a>
+        <a href="{{ path('user') }}" class="btn btn-primary">Retour à la liste des utilisateurs</a>
+        </div>
+    </div>
+{% endblock %}
