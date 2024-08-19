@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
@@ -50,6 +51,11 @@ class UserType extends AbstractType
                 new NotBlank(['message' => 'Le numéro de téléphone ne peut pas être vide.']),
             ],
         ])
+        
+        ->add('birthdate', DateType::class, [
+            'widget' => 'single_text',
+            'label' => 'Date de naissance'
+            ])
 
         ->add('save', SubmitType::class, [
             'label' => 'Envoyer' ,

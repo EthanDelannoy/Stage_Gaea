@@ -1,20 +1,26 @@
 <?php
-
 namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use PhpParser\Node\Expr\FuncCall;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use App\Form\UserType;
+use App\Service\UserService;
 
 class UserController extends AbstractController
 {
+    private $userService;
+
+    // Injecter UserService via le constructeur
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
 
     #[Route('/', name: 'home')]
     public function index(): Response
@@ -22,13 +28,16 @@ class UserController extends AbstractController
         return $this->render('index.html.twig');
     }
 
-
-
     #[Route('/user', name: 'user')]
     public function afficher(Request $request, UserRepository $repository): Response
     {
 
-        $users = $repository->findAll();   
+        $users = $repository->findAll();
+
+        foreach ($users as $user) {
+
+            $user->age = $this->userService->calculateAge($user->getBirthdate());
+        }
 
         return $this->render('user/index.html.twig', [
             'users' => $users
@@ -36,14 +45,15 @@ class UserController extends AbstractController
     }
 
     #[Route('/create', name: 'create')]
-    public function create(Request $request, EntityManagerInterface $em){
+    public function create(Request $request, EntityManagerInterface $em): Response
+    {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($user);
             $em->flush();
-            $this->addFlash('success', 'L\'utilisateur a bien été créée');
+            $this->addFlash('success', 'L\'utilisateur a bien été créé');
             return $this->redirectToRoute('user');
         }
         return $this->render('user/create.html.twig', [
@@ -51,20 +61,20 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/user/{id}', name: 'edit', methods: ['GET', 'POST'], requirements:['id' => Requirement::DIGITS])]
-    public function edit(User $user, Request $request, EntityManagerInterface $em) {
+    #[Route('/user/{id}', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => Requirement::DIGITS])]
+    public function edit(User $user, Request $request, EntityManagerInterface $em): Response
+    {
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
-            $this->addFlash('success', 'L\'utilisateur a bien été modifiée');
+            $this->addFlash('success', 'L\'utilisateur a bien été modifié');
             return $this->redirectToRoute('user');
         }
         return $this->render('user/edit.html.twig', [
             'user' => $user,
             'form' => $form
         ]);
-
     }
 
     #[Route('/user/{id}', name: 'delete', methods: ['DELETE'], requirements: ['id' => Requirement::DIGITS])]
@@ -76,10 +86,9 @@ class UserController extends AbstractController
         return $this->redirectToRoute('user'); 
     }
 
-    #[Route('/user/{id}/possession', name:'possession')]
+    #[Route('/user/{id}/possession', name: 'possession')]
     public function possession(User $user): Response
     {
-
         $possessions = $user->getPossessions();
 
         return $this->render('user/possession.html.twig', [
@@ -87,5 +96,4 @@ class UserController extends AbstractController
             'possessions' => $possessions,
         ]);
     }
-
 }
