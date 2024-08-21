@@ -1,0 +1,6 @@
+npm create vite@latest ./ = creer le projet
+
+npm i = installer les dépendances
+
+npm run dev = lancer le server web
+

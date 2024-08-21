@@ -16,7 +16,6 @@ class UserController extends AbstractController
 {
     private $userService;
 
-    // Injecter UserService via le constructeur
     public function __construct(UserService $userService)
     {
         $this->userService = $userService;
