@@ -47,7 +47,7 @@ function SearchBar ({showStockedOnly, onStockedOnlyChange, search, onSearchChang
       <input
        className="form-control"
         value={search}
-         onChange={onSearchChange}
+        onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Rechercher..."
            />
 
