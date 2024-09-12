@@ -17,6 +17,7 @@ class UserController extends AbstractController
         return $this->render('base.html.twig');
     }
 
+    
     #[Route('/api/users', name: 'api_users', methods: ['GET'])]
     public function getUsers(UserRepository $userRepository): JsonResponse
     {
@@ -41,9 +42,11 @@ class UserController extends AbstractController
     public function deleteUser($id, UserRepository $userRepository, EntityManagerInterface $entityManager): JsonResponse
     {
         $user = $userRepository->find($id);
+
         $entityManager->remove($user);
         $entityManager->flush();
 
         return new JsonResponse(['message' => 'L\'utilisateur a bien été supprimé'], Response::HTTP_OK);
     }
+
 }

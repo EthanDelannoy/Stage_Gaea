@@ -3,6 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -27,6 +30,20 @@ class User
 
     #[ORM\Column(length: 255)]
     private ?string $tel = null;
+
+    /**
+     * @var Collection<int, Possession>
+     */
+    #[ORM\OneToMany(targetEntity: Possession::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $possessions;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $birthDate = null;
+
+    public function __construct()
+    {
+        $this->possessions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -89,6 +106,48 @@ class User
     public function setTel(string $tel): static
     {
         $this->tel = $tel;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Possession>
+     */
+    public function getPossessions(): Collection
+    {
+        return $this->possessions;
+    }
+
+    public function addPossession(Possession $possession): static
+    {
+        if (!$this->possessions->contains($possession)) {
+            $this->possessions->add($possession);
+            $possession->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePossession(Possession $possession): static
+    {
+        if ($this->possessions->removeElement($possession)) {
+            // set the owning side to null (unless already changed)
+            if ($possession->getUser() === $this) {
+                $possession->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getBirthDate(): ?\DateTimeInterface
+    {
+        return $this->birthDate;
+    }
+
+    public function setBirthDate(\DateTimeInterface $birthDate): static
+    {
+        $this->birthDate = $birthDate;
 
         return $this;
     }
