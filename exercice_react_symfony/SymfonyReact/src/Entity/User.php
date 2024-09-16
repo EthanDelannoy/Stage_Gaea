@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User
@@ -14,32 +16,41 @@ class User
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('user:read')]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups('user:read')]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups('user:read')]
     private ?string $prenom = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups('user:read')]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups('user:read')]
     private ?string $adresse = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups('user:read')]
     private ?string $tel = null;
 
     /**
      * @var Collection<int, Possession>
      */
     #[ORM\OneToMany(targetEntity: Possession::class, mappedBy: 'user', orphanRemoval: true)]
+    #[Groups('user:read')]
     private Collection $possessions;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups('user:read')]
+    #[SerializedName('birthDate')]
     private ?\DateTimeInterface $birthDate = null;
-
+    
     public function __construct()
     {
         $this->possessions = new ArrayCollection();

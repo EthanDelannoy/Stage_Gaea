@@ -8,34 +8,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class UserController extends AbstractController
 {
-    #[Route('/', name: 'home')]
-    public function index(): Response
-    {
-        return $this->render('base.html.twig');
-    }
-
     
     #[Route('/api/users', name: 'api_users', methods: ['GET'])]
-    public function getUsers(UserRepository $userRepository): JsonResponse
+    public function getUsers(UserRepository $userRepository, SerializerInterface $serializer): JsonResponse
     {
         $users = $userRepository->findAll();
-        $data = [];
-
-        foreach ($users as $user) {
-            $data[] = [
-                'id' => $user->getId(),
-                'nom' => $user->getNom(),
-                'prenom' => $user->getPrenom(),
-                'email' => $user->getEmail(),
-                'adresse' => $user->getAdresse(),
-                'tel' => $user->getTel()
-            ];
-        }
-
-        return new JsonResponse($data);
+    
+        $data = $serializer->serialize($users, 'json', [
+            'groups' => 'user:read',
+            'datetime_format' => 'Y-m-d'
+        ]);
+    
+        return new JsonResponse($data, 200, [], true);
     }
 
     #[Route('/api/users/{id}', name: 'api_delete_user', methods: ['DELETE'])]

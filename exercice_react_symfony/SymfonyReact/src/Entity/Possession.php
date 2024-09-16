@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PossessionRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PossessionRepository::class)]
 class Possession
@@ -14,12 +15,15 @@ class Possession
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups('user:read')]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups('user:read')]
     private ?float $valeur = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups('user:read')]
     private ?string $type = null;
 
     #[ORM\ManyToOne(inversedBy: 'possessions')]
