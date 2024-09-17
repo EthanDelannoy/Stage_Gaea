@@ -1,0 +1,18 @@
+App\Entity\User:
+  attributes:
+    id:
+      groups: ['user:read']
+    nom:
+      groups: ['user:read']
+    prenom:
+      groups: ['user:read']
+    email:
+      groups: ['user:read']
+    adresse:
+      groups: ['user:read']
+    tel:
+      groups: ['user:read']
+    birthDate:
+      groups: ['user:read']
+    possessions:
+      groups: ['user:read']

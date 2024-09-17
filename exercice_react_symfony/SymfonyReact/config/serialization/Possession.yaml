@@ -1,0 +1,10 @@
+App\Entity\Possession:
+  attributes:
+    id:
+      groups: ['user:read']
+    nom:
+      groups: ['user:read']
+    valeur:
+      groups: ['user:read']
+    type:
+      groups: ['user:read']
