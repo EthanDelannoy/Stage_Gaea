@@ -56,6 +56,13 @@ class User
         $this->possessions = new ArrayCollection();
     }
 
+    #[Groups('user:read')]
+    public function getAge(): int
+    {    
+        $date = new \DateTime();
+        return $date->diff($this->birthDate)->y;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
