@@ -40,34 +40,33 @@ class UserController extends AbstractController
     }
 
     #[Route('/api/users', name: 'api_create_user', methods: ['POST'])]
-    public function createUser(Request $request, EntityManagerInterface $entityManager): JsonResponse
-    {
-        
-        $data = $request->toArray();
-
-        if (empty($data['nom']) || empty($data['prenom']) || empty($data['email']) || empty($data['adresse']) || empty($data['tel']) || empty($data['birthDate'])) {
-            return new JsonResponse(['error' => 'Missing data'], Response::HTTP_BAD_REQUEST);
-        }
-
-        $user = new User();
-        $user->setNom($data['nom']);
-        $user->setPrenom($data['prenom']);
-        $user->setEmail($data['email']);
-        $user->setAdresse($data['adresse']);
-        $user->setTel($data['tel']);
-        $user->setBirthDate(new \DateTime($data['birthDate']));
-
-        $entityManager->persist($user);
-        $entityManager->flush();
-
-        return new JsonResponse([
-            'id' => $user->getId(),
-            'nom' => $user->getNom(),
-            'prenom' => $user->getPrenom(),
-            'email' => $user->getEmail(),
-            'adresse' => $user->getAdresse(),
-            'tel' => $user->getTel(),
-            'birthDate' => $user->getBirthDate()->format('Y-m-d'),
-        ], Response::HTTP_CREATED);
+public function createUser(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager): JsonResponse
+{
+    $user = $serializer->deserialize($request->getContent(), User::class, 'json');
+    
+    if (empty($user->getNom()) || empty($user->getPrenom()) || empty($user->getEmail()) || empty($user->getAdresse()) || empty($user->getTel()) || empty($user->getBirthDate())) {
+        return new JsonResponse(['error' => 'Missing data'], Response::HTTP_BAD_REQUEST);
     }
+
+    $birthDate = $user->getBirthDate();
+    $age = null;
+
+    if ($birthDate) {
+        $age = $birthDate->diff(new \DateTime())->y;
+    }
+
+    $entityManager->persist($user);
+    $entityManager->flush();
+
+    return new JsonResponse([
+        'id' => $user->getId(),
+        'nom' => $user->getNom(),
+        'prenom' => $user->getPrenom(),
+        'email' => $user->getEmail(),
+        'adresse' => $user->getAdresse(),
+        'tel' => $user->getTel(),
+        'birthDate' => $birthDate->format('Y-m-d'),
+        'age' => $age,
+    ], Response::HTTP_CREATED);
+}
 }

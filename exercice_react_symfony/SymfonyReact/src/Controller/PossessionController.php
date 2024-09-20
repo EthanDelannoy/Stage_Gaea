@@ -23,5 +23,18 @@ class PossessionController extends AbstractController
     
         return new JsonResponse($data, 200, [], true);
     }
+
+    #[Route('/api/users/{id}', name: 'api_get_user', methods: ['GET'])]
+    public function getUsers(int $id, UserRepository $userRepository, SerializerInterface $serializer): JsonResponse
+{
+    $user = $userRepository->find($id);
+
+    $data = $serializer->serialize($user, 'json', [
+        'groups' => 'user:read',
+        'datetime_format' => 'Y-m-d'
+    ]);
+    
+    return new JsonResponse($data, 200, [], true);
+}
 }
 

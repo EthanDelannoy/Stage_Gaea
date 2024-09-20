@@ -49,9 +49,9 @@ const UserTableau = () => {
     })
       .then(response => response.json())
       .then(data => {
-        setUsers([...users, data]); // Add the new user to the list
-        setShowModal(false); // Close the modal
-        setFormData({ // Reset the form
+        setUsers([...users, data]);
+        setShowModal(false);
+        setFormData({
           nom: '',
           prenom: '',
           email: '',
@@ -67,7 +67,6 @@ const UserTableau = () => {
     <div className="container mt-5">
       <h1 className="text-center">Utilisateurs</h1>
       
-      {/* Button to open the modal */}
       <button className="btn btn-primary mb-3" onClick={() => setShowModal(true)}>
         Ajouter un utilisateur
       </button>
@@ -107,7 +106,6 @@ const UserTableau = () => {
         </tbody>
       </table>
 
-      {/* Modal */}
       {showModal && (
         <div className="modal fade show d-block" tabIndex="-1">
           <div className="modal-dialog">
